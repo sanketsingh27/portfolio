@@ -1,0 +1,10 @@
+[
+  {
+    "id": "fixture-note",
+    "title": "A fixture note",
+    "summary": "A short summary supplied for a local test.",
+    "platform": "Example",
+    "url": "https://example.org/original",
+    "tags": ["AI"]
+  }
+]

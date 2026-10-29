@@ -1,0 +1,16 @@
+{
+  "profile": {
+    "name": "Sanket Singh",
+    "role": "Test profile",
+    "bio": "This content is a local test fixture, not a public biography."
+  },
+  "settings": {
+    "timezone": "Asia/Kolkata",
+    "tagline": "A local test fixture.",
+    "email": "test@example.org",
+    "bookingUrl": "https://example.org/schedule",
+    "siteUrl": "https://example.org",
+    "socials": []
+  },
+  "facts": ["The fixture project is an experiment in AI."]
+}

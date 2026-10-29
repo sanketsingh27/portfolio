@@ -1,0 +1,26 @@
+[
+  {
+    "id": "fixture-project",
+    "title": "Fixture project",
+    "summary": "A local AI test project, not a real portfolio claim.",
+    "category": "AI",
+    "status": "experiment",
+    "problem": "A fixture problem.",
+    "approach": "A fixture approach.",
+    "role": "Test author",
+    "technologies": ["TypeScript"],
+    "outcomes": [],
+    "steps": ["Explore", "Build"],
+    "repositoryUrl": "https://example.org/repository"
+  },
+  {
+    "id": "fixture-web",
+    "title": "Fixture web project",
+    "summary": "A web-only test fixture.",
+    "category": "Web",
+    "status": "shipped",
+    "technologies": [],
+    "outcomes": [],
+    "steps": []
+  }
+]

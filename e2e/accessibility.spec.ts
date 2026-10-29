@@ -1,0 +1,26 @@
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test("public desktop and open chat meet automated WCAG AA checks", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const audit = () =>
+    new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+      .analyze();
+  expect((await audit()).violations).toEqual([]);
+  await page.getByRole("button", { name: /Explore with me/ }).click();
+  expect((await audit()).violations).toEqual([]);
+  await page.getByRole("button", { name: /Explore with me/ }).click();
+  for (const route of [
+    "/projects",
+    "/writing",
+    "/credentials",
+    "/contact",
+    "/log",
+  ]) {
+    await page.goto(route);
+    expect((await audit()).violations, route).toEqual([]);
+  }
+});
