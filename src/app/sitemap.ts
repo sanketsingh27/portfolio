@@ -8,12 +8,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/projects",
     "/writing",
-    "/credentials",
     "/contact",
     "/book",
     "/log",
     ...data.projects.map((item) => `/projects/${item.id}`),
-    ...data.credentials.map((item) => `/credentials/${item.id}`),
     ...data.logs.map((item) => `/log/${item.date}`),
   ];
   return routes.map((route) => ({

@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "id": "noro",
+    "title": "Noro",
+    "summary": "An AI-powered iOS productivity assistant that turns unstructured voice input into actionable tasks and schedules activities.",
+    "category": "AI & Productivity",
+    "status": "shipped",
+    "approach": "Built with Swift and SwiftUI, using Gemini for task creation and an OpenAI model fallback when Gemini is unavailable.",
+    "technologies": ["Swift", "SwiftUI", "Gemini", "OpenAI SDK"],
+    "outcomes": ["Published on the App Store.", "Converts voice input into tasks and schedules activities."],
+    "steps": [],
+    "demoUrl": "https://apps.apple.com/in/app/adhd-planner-to-do-noro/id6748052904"
+  },
+  {
+    "id": "bibi",
+    "title": "Bibi",
+    "summary": "An AI-powered market research platform in development that turns App Store reviews into consumer insights backed by supporting evidence.",
+    "category": "AI & Research",
+    "status": "experiment",
+    "approach": "Developing Python and FastAPI research workflows for theme extraction and Q&A across three App Store storefronts. Findings link to source reviews, with validation and tracing to monitor quality.",
+    "technologies": ["Python", "FastAPI", "LangChain", "LangGraph", "Deep Agents", "LangSmith"],
+    "outcomes": [],
+    "steps": ["Organize feedback into pain points, feature requests, and positive signals.", "Validate review IDs and findings, and evaluate extraction quality and latency."],
+    "demoUrl": "https://bibi-landing.singhsanket27.workers.dev/"
+  },
+  {
+    "id": "onward",
+    "title": "Onward",
+    "summary": "An AI-powered job-matching prototype that retrieves relevant opportunities using resume and job embeddings, then reranks results by candidate fit.",
+    "category": "AI & Careers",
+    "status": "experiment",
+    "approach": "Stores job and resume embeddings in Cloudflare Vectorize and uses Cloudflare Workers AI for LLM-based reranking. A Hono backend serves personalized recommendations to a React application.",
+    "technologies": ["Cloudflare Workers AI", "Cloudflare Vectorize", "Hono", "React"],
+    "outcomes": ["Built a prototype for personalized job recommendations."],
+    "steps": []
+  }
+]

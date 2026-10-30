@@ -11,7 +11,9 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. The site works without AI credentials. The empty content collections are intentional: prototype projects and credentials are fictional and have not been migrated as real achievements.
+Open http://localhost:3000. The site works without AI credentials. Profile details and projects use the owner's supplied résumé and confirmed contact links. Writing and daily logs remain empty until publications or updates are added.
+
+The chat launcher is hidden for now; the existing `/chat` implementation is retained for later. Credentials is removed from navigation and public routes. The résumé download is available in the top bar and About window.
 
 ## Add your information
 
@@ -54,6 +56,8 @@ npm run build
 ```
 
 `npm test` runs the full unit/CLI and browser suites. Playwright launches the app with explicitly local test content and a local OpenAI-compatible provider substitute. These fixture paths are disabled in production. The browser tests exercise the actual server handler and substitute only the external provider boundary. Tests never make real calendar bookings or paid model calls.
+
+If your preview already uses port 3000, run `PLAYWRIGHT_PORT=3002 npm test`. Tests use an isolated `.next-test` output directory so they do not replace the running preview's development assets. Local development explicitly permits the loopback hosts `localhost` and `127.0.0.1`.
 
 ## Deploy to Vercel
 

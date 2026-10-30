@@ -10,7 +10,10 @@
     "email": "test@example.org",
     "bookingUrl": "https://example.org/schedule",
     "siteUrl": "https://example.org",
-    "socials": []
+    "socials": [
+      { "label": "LinkedIn", "url": "https://example.org/linkedin" },
+      { "label": "Twitter", "url": "https://example.org/twitter" }
+    ]
   },
   "facts": ["The fixture project is an experiment in AI."]
 }

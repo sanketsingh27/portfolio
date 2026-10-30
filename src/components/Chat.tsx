@@ -10,11 +10,12 @@ type Message = { role: "user" | "assistant"; content: string };
 export default function Chat({
   data,
   onNavigate,
+  active,
 }: {
   data: Portfolio;
   onNavigate: () => void;
+  active: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -30,6 +31,12 @@ export default function Chat({
       abort.current?.abort();
     },
     [],
+  );
+  useEffect(
+    () => () => {
+      abort.current?.abort();
+    },
+    [active],
   );
   useEffect(() => {
     if (end.current) end.current.scrollTop = end.current.scrollHeight;
@@ -70,7 +77,7 @@ export default function Chat({
       let answer = "";
       while (true) {
         const { value, done } = await reader.read();
-        if (id !== operation.current) {
+        if (controller.signal.aborted || id !== operation.current) {
           await reader.cancel();
           return;
         }
@@ -117,8 +124,8 @@ export default function Chat({
 
   return (
     <section
-      className={`chat${expanded ? " chat-expanded" : ""}`}
-      aria-label="Explore with me"
+      className="chat chat-in-window"
+      aria-label="Ask anything about Sanket"
       onClick={(event) => {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
@@ -126,28 +133,15 @@ export default function Chat({
           .closest("a")
           ?.getAttribute("href");
         if (href?.startsWith("/")) {
-          setExpanded(false);
           onNavigate();
         }
       }}
     >
-      <button
-        type="button"
-        className="chat-toggle"
-        aria-expanded={expanded}
-        aria-controls="assistant-panel"
-        onClick={() => setExpanded(!expanded)}
-      >
-        Explore with me {expanded ? "−" : "+"}
-      </button>
-      {!expanded && <p>Ask my AI assistant about this portfolio.</p>}
-      <div
-        id="assistant-panel"
-        hidden={!expanded}
-        aria-labelledby="assistant-title"
-      >
-        <p className="eyebrow">EXPLORE WITH ME</p>
-        <h2 id="assistant-title">Ask about {data.profile.name}</h2>
+      <div className="eyebrow">A conversation / Sanket’s AI assistant</div>
+      <h1 id="assistant-title" className="content-heading">
+        Ask anything about Sanket
+      </h1>
+      <div id="assistant-panel" aria-labelledby="assistant-title">
         <p>
           I’m an AI assistant. I use approved portfolio information and may make
           mistakes. Messages go to an external AI provider. Avoid sharing
@@ -172,7 +166,12 @@ export default function Chat({
                 {message.role === "user" ? "You" : "AI assistant"}
               </strong>
               <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
-                {message.content || (busy ? "Thinking…" : "Response stopped.")}
+                {message.content ||
+                  (busy
+                    ? "Thinking…"
+                    : error
+                      ? "No answer received."
+                      : "Response stopped.")}
               </p>
             </div>
           ))}
@@ -253,9 +252,6 @@ export default function Chat({
               {article.title} (opens in a new tab)
             </a>
           ))}
-          {data.credentials.length > 0 && (
-            <Link href="/credentials">Credentials</Link>
-          )}
           {data.logs.map((log) => (
             <Link key={log.date} href={`/log/${log.date}`}>
               {log.title} · {log.date}

@@ -108,7 +108,7 @@ test("project filters, details and direct links describe the same approved recor
   );
 });
 
-test("scheduling links and credentials use configured external destinations", async ({
+test("scheduling links use configured external destinations", async ({
   page,
 }) => {
   await page.goto("/book");
@@ -118,10 +118,6 @@ test("scheduling links and credentials use configured external destinations", as
   await expect(
     page.getByRole("link", { name: /test@example.org/ }),
   ).toHaveAttribute("href", "mailto:test@example.org");
-  await page.goto("/credentials/fixture-credential");
-  await expect(
-    page.getByRole("link", { name: /Verify credential/ }),
-  ).toHaveAttribute("href", "https://example.org/verify");
 });
 
 test("invalid detail destinations return a real not-found response", async ({
@@ -130,6 +126,8 @@ test("invalid detail destinations return a real not-found response", async ({
 }) => {
   for (const path of [
     "/projects/unknown",
+    "/credentials",
+    "/credentials/fixture-credential",
     "/writing/unknown",
     "/about/unknown",
     "/not-a-section",
@@ -150,7 +148,7 @@ test("mobile layout stays within a narrow viewport with chat open", async ({
 }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto("/writing");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await expect(
     page.getByRole("textbox", { name: "Your question" }),
   ).toBeVisible();

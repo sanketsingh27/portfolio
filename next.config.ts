@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
+  distDir:
+    process.env.PLAYWRIGHT_TEST === "true" &&
+    process.env.NODE_ENV !== "production"
+      ? ".next-test"
+      : ".next",
   turbopack: { root: process.cwd() },
   poweredByHeader: false,
   async headers() {

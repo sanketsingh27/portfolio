@@ -2,23 +2,14 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import type { Portfolio } from "@/lib/content";
 import { DesktopIcon } from "./DesktopIcon";
-const Chat = dynamic(() => import("./Chat"), {
-  ssr: false,
-  loading: () => (
-    <aside className="assistant">
-      <span className="assistant-title">✳ Explore with me</span>
-      <p className="tiny-note">Loading assistant…</p>
-    </aside>
-  ),
-});
+import { ContactDock } from "./ContactDock";
+import Chat from "./Chat";
 const sections = [
   ["projects", "Projects"],
   ["log", "Daily Log"],
   ["writing", "Writing"],
-  ["credentials", "Credentials"],
 ];
 export default function Desktop({
   data,
@@ -111,6 +102,13 @@ export default function Desktop({
           <span className="brand">Sanket’s desktop</span>
         </Link>
         <nav className="top-nav" aria-label="Desktop menu">
+          <a
+            href="/sanket-singh-resume.pdf"
+            download="Sanket-Singh-Resume.pdf"
+            className="text-btn"
+          >
+            Résumé ↓
+          </a>
           <Link href="/book" onClick={open} className="text-btn">
             Book a call ↗
           </Link>
@@ -139,7 +137,7 @@ export default function Desktop({
         {state !== "open" && (
           <div className="desktop-empty">
             <h2>Room to explore.</h2>
-            <p>Open a folder, or let the guide below show you around.</p>
+            <p>Open a folder to explore.</p>
             {state === "minimized" && (
               <button
                 className="text-btn"
@@ -155,7 +153,7 @@ export default function Desktop({
         )}
         <section
           ref={windowRef}
-          className="window"
+          className={`window${section === "chat" ? " window-chat" : ""}`}
           aria-label="Portfolio window"
           hidden={state !== "open"}
           style={
@@ -190,9 +188,11 @@ export default function Desktop({
             onPointerCancel={() => (drag.current = null)}
           >
             <span className="title-caption">
-              {section === "about"
-                ? "about-me.txt"
-                : `${section} / ${pathname.split("/")[2] || "index"}`}
+              {section === "chat"
+                ? "chat / conversation"
+                : section === "about"
+                  ? "about-me.txt"
+                  : `${section} / ${pathname.split("/")[2] || "index"}`}
             </span>
             <div className="window-controls">
               <button
@@ -217,7 +217,14 @@ export default function Desktop({
             id="portfolio-content"
             tabIndex={-1}
           >
-            {children}
+            {section !== "chat" && children}
+            <div hidden={section !== "chat"}>
+              <Chat
+                data={data}
+                onNavigate={open}
+                active={section === "chat" && state === "open"}
+              />
+            </div>
           </div>
           <footer className="window-footer">
             <span>sanket / {section}</span>
@@ -230,25 +237,7 @@ export default function Desktop({
           curious.
         </div>
       </main>
-      <Chat data={data} onNavigate={open} />
-      <nav className="dock" aria-label="Contact and social links">
-        <Link href="/contact" onClick={open}>
-          <span aria-hidden="true">✉</span>
-          <span className="dock-label">Contact</span>
-        </Link>
-        {data.settings.socials.map((s) => (
-          <a
-            key={s.url}
-            href={s.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${s.label} (opens in a new tab)`}
-          >
-            <span aria-hidden="true">↗</span>
-            <span className="dock-label">{s.label}</span>
-          </a>
-        ))}
-      </nav>
+      <ContactDock data={data} />
       <p className="desk-note">
         A personal desktop, in progress.
         <br />

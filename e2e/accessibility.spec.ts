@@ -10,13 +10,11 @@ test("public desktop and open chat meet automated WCAG AA checks", async ({
       .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
       .analyze();
   expect((await audit()).violations).toEqual([]);
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   expect((await audit()).violations).toEqual([]);
-  await page.getByRole("button", { name: /Explore with me/ }).click();
   for (const route of [
     "/projects",
     "/writing",
-    "/credentials",
     "/contact",
     "/log",
   ]) {

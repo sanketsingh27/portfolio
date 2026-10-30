@@ -18,6 +18,7 @@ export function ContentView({
 }) {
   const section = segments[0] || "about";
   const id = segments[1];
+  if (section === "chat") return null;
   if (section === "about") return <AboutView data={data} />;
   if (section === "projects") return <ProjectsView data={data} id={id} />;
   if (section === "writing") return <WritingView data={data} />;

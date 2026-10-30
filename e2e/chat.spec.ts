@@ -52,7 +52,7 @@ test("chat streams, retains follow-ups, and clears conversation", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await expect(
     page.getByText(/Messages go to an external AI provider/),
   ).toBeVisible();
@@ -95,7 +95,7 @@ test("stop and clear prevent a slow response from restoring old messages", async
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await page.getByLabel("Your question").fill("slow response");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
@@ -123,11 +123,13 @@ test("provider failures support retry and leave approved navigation available", 
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await page.getByLabel("Your question").fill("provider failure");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
-    page.getByRole("region", { name: "Explore with me" }).getByRole("alert"),
+    page
+      .getByRole("region", { name: "Ask anything about Sanket" })
+      .getByRole("alert"),
   ).toContainText("failed");
   const retryRequest = page.waitForRequest(
     (request) =>
@@ -138,7 +140,9 @@ test("provider failures support retry and leave approved navigation available", 
     "provider failure",
   );
   await expect(
-    page.getByRole("region", { name: "Explore with me" }).getByRole("alert"),
+    page
+      .getByRole("region", { name: "Ask anything about Sanket" })
+      .getByRole("alert"),
   ).toContainText("failed");
   const sources = page.getByRole("navigation", {
     name: "Approved portfolio sources",
@@ -153,15 +157,17 @@ test("provider failures support retry and leave approved navigation available", 
 
 test("provider budget rejection keeps contact accessible", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await page.getByLabel("Your question").fill("budget limit");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(
-    page.getByRole("region", { name: "Explore with me" }).getByRole("alert"),
+    page
+      .getByRole("region", { name: "Ask anything about Sanket" })
+      .getByRole("alert"),
   ).toContainText("usage limit");
   await expect(
     page
-      .getByRole("region", { name: "Explore with me" })
+      .getByRole("region", { name: "Ask anything about Sanket" })
       .getByRole("alert")
       .getByRole("link", { name: "Contact" }),
   ).toHaveAttribute("href", "/contact");
@@ -175,7 +181,7 @@ test("writing and scheduling handoffs preserve their information boundaries", as
     .getByRole("region", { name: "Portfolio window" })
     .getByRole("link", { name: /Book a call/ })
     .getAttribute("href");
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await page.getByLabel("Your question").fill("writing");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page.getByRole("log")).toContainText(
@@ -196,3 +202,76 @@ test("writing and scheduling handoffs preserve their information boundaries", as
     sources.getByRole("link", { name: /Book a call/ }),
   ).toHaveAttribute("href", booking!);
 });
+
+test("chat loads in the portfolio window and preserves history and drafts across navigation", async ({
+  page,
+}) => {
+  await page.goto("/chat");
+  const window = page.getByRole("region", { name: "Portfolio window" });
+  const heading = window.getByRole("heading", {
+    name: "Ask anything about Sanket",
+    level: 1,
+  });
+  await expect(heading).toBeVisible();
+  await page.reload();
+  await expect(page).toHaveURL(/\/chat$/);
+  await expect(heading).toBeVisible();
+  await window.getByLabel("Your question").fill("Tell me about AI projects");
+  await window.getByRole("button", { name: "Send", exact: true }).click();
+  const conversation = window.getByRole("log", { name: "Conversation" });
+  await expect(conversation).toContainText("experiment in AI");
+  await expect(
+    window.getByRole("button", { name: "Retry", exact: true }),
+  ).toBeVisible();
+  await window.getByLabel("Your question").fill("Keep this follow-up draft");
+  await page
+    .getByRole("navigation", { name: "Approved portfolio sources" })
+    .getByRole("link", { name: "Projects", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(
+    window.getByRole("heading", { name: "The workbench." }),
+  ).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(/\/chat$/);
+  await expect(heading).toBeVisible();
+  await expect(window.getByLabel("Your question")).toHaveValue(
+    "Keep this follow-up draft",
+  );
+  await expect(conversation).toContainText("Tell me about AI projects");
+  await expect(conversation).toContainText("experiment in AI");
+});
+
+for (const control of ["Close window", "Minimize window"]) {
+  test(`${control} stops chat and skip-to-content restores its history and draft`, async ({
+    page,
+  }) => {
+    await page.goto("/chat");
+    const window = page.getByRole("region", { name: "Portfolio window" });
+    await window.getByLabel("Your question").fill("slow response");
+    await window.getByRole("button", { name: "Send", exact: true }).click();
+    await expect(
+      window.getByRole("button", { name: "Stop", exact: true }),
+    ).toBeVisible();
+    await window
+      .getByLabel("Your question")
+      .fill("Keep this draft while hidden");
+    await window.getByRole("button", { name: control, exact: true }).click();
+    await expect(window).toBeHidden();
+    await page.locator(".skip-link").focus();
+    await page.keyboard.press("Enter");
+    await expect(window).toBeVisible();
+    await expect(window.getByLabel("Your question")).toHaveValue(
+      "Keep this draft while hidden",
+    );
+    await expect(
+      window.getByRole("log", { name: "Conversation" }),
+    ).toContainText("slow response");
+    await expect(
+      window.getByRole("button", { name: "Stop", exact: true }),
+    ).toBeHidden();
+    await expect(
+      window.getByRole("button", { name: "Retry", exact: true }),
+    ).toBeVisible();
+  });
+}

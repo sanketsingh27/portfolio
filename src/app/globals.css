@@ -1457,3 +1457,105 @@ h3 {
 .credential:hover .card-title {
   color: var(--orange);
 }
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-close {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.chat-close:hover {
+  background: #efd6c9;
+  color: var(--orange);
+}
+.dock button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* The assistant uses the same desktop window as the portfolio sections. */
+.assistant-launcher {
+  position: fixed;
+  bottom: 91px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(640px, calc(100% - 40px));
+  padding: 16px 20px;
+  background: #fbf9f1;
+  border: 1px solid #b7ae9b;
+  border-radius: 10px;
+  box-shadow: 0 7px 22px #4b402212;
+  z-index: 20;
+}
+.assistant-launcher strong {
+  display: block;
+  font-size: 12px;
+}
+.assistant-launcher small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.assistant-launcher:hover {
+  border-color: var(--orange);
+  background: var(--white);
+}
+.chat-in-window {
+  position: static;
+  transform: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.chat-in-window h1 {
+  font:
+    400 36px/1.15 Georgia,
+    serif;
+  margin-bottom: 16px;
+}
+.chat-in-window .chat-messages {
+  min-height: 140px;
+  max-height: 28dvh;
+}
+.window-chat .window-content {
+  max-height: calc(100dvh - 290px);
+}
+@media (max-width: 650px) {
+  .assistant-launcher {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: calc(100% - 26px);
+    margin: 22px auto;
+  }
+  .chat-in-window {
+    margin: 0;
+    width: 100%;
+  }
+  .chat-in-window h1 {
+    font-size: 30px;
+  }
+  .window-chat .window-content {
+    max-height: none;
+  }
+}
+.assistant-launcher[hidden] {
+  display: none;
+}

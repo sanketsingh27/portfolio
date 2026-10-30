@@ -8,10 +8,10 @@ export function resolveView(segments: string[], data: Portfolio) {
     about: "About",
     projects: "Projects",
     writing: "Writing",
-    credentials: "Credentials",
     contact: "Contact",
     book: "Book a call",
     log: "Daily Log",
+    chat: "Ask anything about Sanket",
   };
   if (!(section in titles)) return null;
   if (!id)

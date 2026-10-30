@@ -1,9 +1,23 @@
 {
-  "profile": { "name": "Sanket Singh" },
+  "profile": {
+    "name": "Sanket Singh",
+    "role": "Senior Full-Stack Engineer · Backend Systems · Generative AI",
+    "bio": "I build backend systems, APIs, and AI-powered products. My experience spans financial services, e-commerce, and logistics, alongside projects in productivity, market research, and job matching. I’m actively looking for a role and available to join immediately."
+  },
   "settings": {
     "timezone": "Asia/Kolkata",
     "tagline": "A place for things I’m making & figuring out.",
-    "socials": []
+    "email": "singhsanket27@gmail.com",
+    "bookingUrl": "https://cal.com/snkt27/30min",
+    "socials": [
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/sanketsingh27/" },
+      { "label": "Twitter / X", "url": "https://x.com/SinghSanket27" }
+    ]
   },
-  "facts": []
+  "facts": [
+    "Actively looking for a job and available to join immediately.",
+    "Senior full-stack engineer with experience in backend services, APIs, microservices, and generative AI.",
+    "Bachelor of Engineering in Computer Technology, KITS, Nagpur (2013–2017).",
+    "Book a 30-minute conversation using the published Cal.com link."
+  ]
 }

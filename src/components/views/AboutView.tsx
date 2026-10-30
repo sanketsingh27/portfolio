@@ -47,6 +47,13 @@ export function AboutView({ data }: { data: Portfolio }) {
         <Link href="/contact" className="text-btn">
           Contact me ↗
         </Link>
+        <a
+          href="/sanket-singh-resume.pdf"
+          download="Sanket-Singh-Resume.pdf"
+          className="text-btn"
+        >
+          Download résumé ↓
+        </a>
         <Link href="/projects" className="primary">
           Open the workbench ↗
         </Link>

@@ -1,10 +1,33 @@
 import { test, expect } from "@playwright/test";
+test("chat entry is hidden while the dock exposes the three contact destinations", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: /Ask anything about Sanket/ })).toHaveCount(0);
+  await page.getByRole("button", { name: "Close window", exact: true }).click();
+  await expect(page.locator(".assistant-launcher")).toHaveCount(0);
+  await expect(page.getByText("Open a folder to explore.")).toBeVisible();
+  const dock = page.getByRole("navigation", {
+    name: "Contact and social links",
+  });
+  await expect(dock.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute(
+    "href",
+    "https://example.org/linkedin",
+  );
+  await expect(dock.getByRole("link", { name: /Twitter/ })).toHaveAttribute(
+    "href",
+    "https://example.org/twitter",
+  );
+  await expect(
+    dock.getByRole("link", { name: "Email", exact: true }),
+  ).toHaveAttribute("href", "mailto:test@example.org");
+});
 test("assistant source restores a closed window even when its URL is unchanged", async ({
   page,
 }) => {
   await page.goto("/projects");
   await page.getByRole("button", { name: "Close window" }).click();
-  await page.getByRole("button", { name: /Explore with me/ }).click();
+  await page.goto("/chat");
   await page
     .getByRole("navigation", { name: "Approved portfolio sources" })
     .getByRole("link", { name: "Projects", exact: true })
@@ -85,7 +108,7 @@ test("phone content uses the page scroll and all sections remain reachable", asy
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page.getByRole("link", { name: "Contact", exact: true }).click();
+  await page.goto("/contact");
   await expect(
     page.getByRole("heading", { name: /Good things start/ }),
   ).toBeVisible();
