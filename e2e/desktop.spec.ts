@@ -10,6 +10,16 @@ test("chat entry stays hidden and contact links retain their destinations", asyn
   await expect(
     page.getByRole("textbox", { name: "Your question" }),
   ).toHaveCount(0);
+  const social = page.getByRole("navigation", { name: "Social links", exact: true });
+  await expect(
+    social.getByRole("link", { name: /LinkedIn/ }),
+  ).toHaveAttribute("href", "https://example.org/linkedin");
+  await expect(
+    social.getByRole("link", { name: /Twitter|X/ }),
+  ).toHaveAttribute("href", "https://example.org/twitter");
+  await expect(
+    social.getByRole("link", { name: "Email", exact: true }),
+  ).toHaveAttribute("href", "mailto:test@example.org");
   const contacts = page.getByRole("navigation", {
     name: "Contact and social links",
   });
@@ -51,7 +61,7 @@ test("landing navigation reaches work and about and offers a downloadable resume
   expect((await request.get("/sanket-singh-resume.pdf")).ok()).toBe(true);
 });
 
-test("project and writing routes preserve navigation, browser history and reload", async ({
+test("project and home routes preserve navigation, browser history and reload", async ({
   page,
 }) => {
   await page.goto("/");
@@ -65,10 +75,10 @@ test("project and writing routes preserve navigation, browser history and reload
   ).toBeVisible();
   await page
     .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "Writing", exact: true })
+    .getByRole("link", { name: "About", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Notes from the middle." }),
+    page.getByRole("heading", { name: "I build products and I ship them." }),
   ).toBeVisible();
   await page.goBack();
   await expect(
@@ -104,10 +114,10 @@ test("phone content uses page scroll and all navigation remains reachable", asyn
   ).toBe(true);
   await page
     .getByRole("navigation", { name: "Main navigation" })
-    .getByRole("link", { name: "Writing", exact: true })
+    .getByRole("link", { name: "About", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Notes from the middle." }),
+    page.getByRole("heading", { name: "I build products and I ship them." }),
   ).toBeVisible();
   expect(
     await page.evaluate(

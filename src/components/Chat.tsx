@@ -155,7 +155,7 @@ export default function Chat({
           aria-live="off"
         >
           {!messages.length && (
-            <p>Ask about projects, writing, or how to get in touch.</p>
+            <p>Ask about projects, experience, or how to get in touch.</p>
           )}
           {messages.map((message, index) => (
             <div
@@ -185,8 +185,8 @@ export default function Chat({
         </p>
         {error && (
           <p role="alert">
-            {error} You can still browse <Link href="/writing">Writing</Link> or{" "}
-            <Link href="/contact">Contact</Link>.
+            {error} You can still browse <Link href="/projects">Projects</Link>{" "}
+            or <Link href="/contact">Contact</Link>.
           </p>
         )}
         <form onSubmit={submit} className="chat-composer">
@@ -233,8 +233,6 @@ export default function Chat({
             <strong>Explore &amp; verify</strong> · Approved public sources
           </p>
           <Link href="/projects">Projects</Link>
-          {" · "}
-          <Link href="/writing">Writing</Link>
           {" · "}
           <Link href="/contact">Contact</Link>
           {data.projects.map((project) => (

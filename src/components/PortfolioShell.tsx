@@ -27,23 +27,59 @@ export default function PortfolioShell({
           </span>
           <span>{data.profile.name}</span>
         </Link>
-        <nav className="d2-nav" aria-label="Main navigation">
-          <Link
-            href="/#work"
-            aria-current={pathname.startsWith("/projects") ? "page" : undefined}
-          >
-            Work
-          </Link>
-          <Link href="/#about">About</Link>
-          {data.writing.length > 0 && (
+        <div className="d2-navigation-group">
+          <nav className="d2-nav" aria-label="Main navigation">
             <Link
-              href="/writing"
-              aria-current={pathname === "/writing" ? "page" : undefined}
+              href="/#work"
+              aria-current={
+                pathname.startsWith("/projects") ? "page" : undefined
+              }
             >
-              Writing
+              Work
             </Link>
-          )}
-        </nav>
+            <Link href="/#about">About</Link>
+          </nav>
+          <nav className="d2-social-pill" aria-label="Social links">
+            {data.settings.socials.map((social) => (
+              <a
+                key={social.url}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${social.label} (opens in a new tab)`}
+                title={social.label}
+              >
+                <span aria-hidden="true">
+                  {/linkedin/i.test(social.label)
+                    ? "in"
+                    : /twitter|\bx\b/i.test(social.label)
+                      ? "𝕏"
+                      : social.label}
+                </span>
+              </a>
+            ))}
+            {data.settings.email && (
+              <a
+                href={`mailto:${data.settings.email}`}
+                aria-label="Email"
+                title="Email"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 6 9 7 9-7" />
+                </svg>
+              </a>
+            )}
+          </nav>
+        </div>
         <a
           className="d2-resume"
           href="/sanket-singh-resume.pdf"

@@ -134,10 +134,6 @@ export function PortfolioHome({ data }: { data: Portfolio }) {
   return (
     <div className="d2-home">
       <section className="d2-hero" aria-labelledby="d2-hero-title">
-        <p className="d2-availability">
-          <span />
-          Actively looking · Can join immediately
-        </p>
         <div className="d2-hero-stage">
           <Eyes className="d2-mascot-blue" />
           <Eyes className="d2-mascot-orange" />
@@ -232,33 +228,54 @@ export function PortfolioHome({ data }: { data: Portfolio }) {
         className="d2-capabilities"
         aria-labelledby="d2-capabilities-title"
       >
-        <div className="d2-section-intro">
-          <span className="d2-mono">A LITTLE BIT OF EVERYTHING</span>
+        <div className="d2-capabilities-intro">
           <h2 id="d2-capabilities-title">
-            What I<br />
-            work on
-            <span className="d2-lime-star" aria-hidden="true">
-              ✳
-            </span>
+            What I <span>work on</span>
           </h2>
           <p>
             I like connecting the dots between a useful idea and the engineering
             it takes to make it real.
           </p>
         </div>
-        <div className="d2-capability-list">
+        <ul className="d2-capability-list">
           {capabilities.map(([title, copy, tech], i) => (
-            <div className="d2-capability" key={title}>
-              <span className="d2-mono">0{i + 1}</span>
+            <li className="d2-capability" key={title}>
+              <span className="d2-capability-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 32 32"
+                  width="36"
+                  height="36"
+                  fill="currentColor"
+                  shapeRendering="crispEdges"
+                >
+                  {i === 0 ? (
+                    <path
+                      d="M6 4h20v4h3v6h-3v4h3v6h-3v4H6v-4H3v-6h3v-4H3V8h3zm3 6v2h3v-2zm0 10v2h3v-2zm8-10v2h6v-2zm0 10v2h6v-2z"
+                      fillRule="evenodd"
+                    />
+                  ) : i === 1 ? (
+                    <path d="M14 2h4v8h4v4h8v4h-8v4h-4v8h-4v-8h-4v-4H2v-4h8v-4h4zM4 2h4v4H4zm20 24h4v4h-4z" />
+                  ) : i === 2 ? (
+                    <path
+                      d="M2 4h28v20H18v3h6v3H8v-3h6v-3H2zm4 4v12h20V8zm4 3h4v3h-3v2h3v3h-4v-3H8v-2h2zm8 0h4v3h2v2h-2v3h-4v-3h3v-2h-3z"
+                      fillRule="evenodd"
+                    />
+                  ) : (
+                    <path
+                      d="M12 2h8v4h4v4h4v12h-4v4h-4v4h-8v-4H8v-4H4V10h4V6h4zm0 9v10h8V11z"
+                      fillRule="evenodd"
+                    />
+                  )}
+                </svg>
+              </span>
               <div>
                 <h3>{title}</h3>
                 <p>{copy}</p>
-                <span className="d2-mono">{tech}</span>
+                <span className="d2-capability-tech">{tech}</span>
               </div>
-              <span aria-hidden="true">↗</span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
       <section
         className="d2-experience"
@@ -298,29 +315,6 @@ export function PortfolioHome({ data }: { data: Portfolio }) {
           </p>
         </div>
       </section>
-      {data.writing.length > 0 && (
-        <section className="d2-writing">
-          <span className="d2-mono">NOTES FROM THE WORKBENCH</span>
-          <h2>Thinking out loud.</h2>
-          {data.writing.map((item) => (
-            <a
-              href={item.url}
-              key={item.id}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.summary}</p>
-                <span className="d2-mono">
-                  Read original · opens in a new tab
-                </span>
-              </div>
-              <span>↗</span>
-            </a>
-          ))}
-        </section>
-      )}
     </div>
   );
 }

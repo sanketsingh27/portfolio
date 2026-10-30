@@ -148,8 +148,8 @@ test("provider failures support retry and leave approved navigation available", 
     name: "Approved portfolio sources",
   });
   await expect(
-    sources.getByRole("link", { name: "Writing", exact: true }),
-  ).toHaveAttribute("href", "/writing");
+    sources.getByRole("link", { name: "Projects", exact: true }),
+  ).toHaveAttribute("href", "/projects");
   await expect(
     sources.getByRole("link", { name: "Contact", exact: true }),
   ).toHaveAttribute("href", "/contact");

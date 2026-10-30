@@ -13,7 +13,7 @@ npm run dev
 
 Open http://localhost:3000. The site works without AI credentials. Profile details and projects use the owner's supplied résumé and confirmed contact links. Writing and daily logs remain empty until publications or updates are added.
 
-The homepage includes selected work, engineering focus, career history, and contact links. Writing appears in the main navigation when a publication exists; Daily Log remains reachable directly. The chat launcher is hidden; the existing `/chat` implementation is retained for later. Credentials is removed from navigation and public routes. The résumé download is available in the header and footer.
+The homepage includes selected work, engineering focus, career history, and contact links. A separate social-links pill sits beside Work and About. Writing and Credentials are removed from navigation and public routes; Daily Log remains reachable directly. The chat launcher is hidden; the existing `/chat` implementation is retained for later. The résumé download is available in the header and footer. The existing writing data and local CLI are retained, but do not publish a Writing page.
 
 ## Add your information
 

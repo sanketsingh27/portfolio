@@ -3,7 +3,6 @@
 import type { Portfolio } from "@/lib/content";
 import { PortfolioHome } from "./PortfolioHome";
 import { ProjectsView } from "./views/ProjectsView";
-import { WritingView } from "./views/WritingView";
 import { CredentialsView } from "./views/CredentialsView";
 import { LogView } from "./views/LogView";
 import { ContactView } from "./views/ContactView";
@@ -21,7 +20,6 @@ export function ContentView({
   if (section === "chat") return null;
   if (section === "about") return <PortfolioHome data={data} />;
   if (section === "projects") return <ProjectsView data={data} id={id} />;
-  if (section === "writing") return <WritingView data={data} />;
   if (section === "credentials") return <CredentialsView data={data} id={id} />;
   if (section === "log") return <LogView data={data} id={id} />;
   if (section === "contact" || section === "book")

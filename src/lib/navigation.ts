@@ -7,7 +7,6 @@ export function resolveView(segments: string[], data: Portfolio) {
   const titles: Record<string, string> = {
     about: "About",
     projects: "Projects",
-    writing: "Writing",
     contact: "Contact",
     book: "Book a call",
     log: "Daily Log",
