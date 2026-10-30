@@ -1,7 +1,7 @@
 "use client";
 
 import type { Portfolio } from "@/lib/content";
-import { AboutView } from "./views/AboutView";
+import { PortfolioHome } from "./PortfolioHome";
 import { ProjectsView } from "./views/ProjectsView";
 import { WritingView } from "./views/WritingView";
 import { CredentialsView } from "./views/CredentialsView";
@@ -19,7 +19,7 @@ export function ContentView({
   const section = segments[0] || "about";
   const id = segments[1];
   if (section === "chat") return null;
-  if (section === "about") return <AboutView data={data} />;
+  if (section === "about") return <PortfolioHome data={data} />;
   if (section === "projects") return <ProjectsView data={data} id={id} />;
   if (section === "writing") return <WritingView data={data} />;
   if (section === "credentials") return <CredentialsView data={data} id={id} />;

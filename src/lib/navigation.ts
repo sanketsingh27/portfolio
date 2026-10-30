@@ -20,7 +20,7 @@ export function resolveView(segments: string[], data: Portfolio) {
       description:
         section === "about"
           ? data.profile.bio ||
-            `Explore ${data.profile.name}’s personal desktop.`
+            `Explore ${data.profile.name}’s work and experience.`
           : `${titles[section]} from ${data.profile.name}.`,
     };
   const detail =

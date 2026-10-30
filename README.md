@@ -1,6 +1,6 @@
-# Sanket’s desktop
+# Sanket Singh — Portfolio
 
-A Next.js portfolio based on the included desktop prototype. Content lives in versioned JSON files; Writing links to original publications elsewhere. The AI assistant runs through a server endpoint on Vercel. No Convex, CMS or application database is required.
+A Next.js portfolio. The `design_2` branch follows the dark, playful typography and folder-card layout of [owoetoni.com](https://owoetoni.com/), using Sanket's own résumé and project content. The prior desktop design is saved on `feat/portfolio-personalization`. Content lives in versioned JSON files; Writing links to original publications elsewhere. No Convex, CMS or application database is required.
 
 ## Start locally
 
@@ -13,7 +13,7 @@ npm run dev
 
 Open http://localhost:3000. The site works without AI credentials. Profile details and projects use the owner's supplied résumé and confirmed contact links. Writing and daily logs remain empty until publications or updates are added.
 
-The chat launcher is hidden for now; the existing `/chat` implementation is retained for later. Credentials is removed from navigation and public routes. The résumé download is available in the top bar and About window.
+The homepage includes selected work, engineering focus, career history, and contact links. Writing appears in the main navigation when a publication exists; Daily Log remains reachable directly. The chat launcher is hidden; the existing `/chat` implementation is retained for later. Credentials is removed from navigation and public routes. The résumé download is available in the header and footer.
 
 ## Add your information
 

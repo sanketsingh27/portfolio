@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test("public desktop and open chat meet automated WCAG AA checks", async ({
+test("public portfolio and direct chat meet automated WCAG AA checks", async ({
   page,
 }) => {
   await page.goto("/");
@@ -12,12 +12,7 @@ test("public desktop and open chat meet automated WCAG AA checks", async ({
   expect((await audit()).violations).toEqual([]);
   await page.goto("/chat");
   expect((await audit()).violations).toEqual([]);
-  for (const route of [
-    "/projects",
-    "/writing",
-    "/contact",
-    "/log",
-  ]) {
+  for (const route of ["/projects", "/writing", "/contact", "/log"]) {
     await page.goto(route);
     expect((await audit()).violations, route).toEqual([]);
   }

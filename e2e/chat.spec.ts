@@ -178,7 +178,7 @@ test("writing and scheduling handoffs preserve their information boundaries", as
 }) => {
   await page.goto("/contact");
   const booking = await page
-    .getByRole("region", { name: "Portfolio window" })
+    .getByRole("main", { name: "Portfolio content" })
     .getByRole("link", { name: /Book a call/ })
     .getAttribute("href");
   await page.goto("/chat");
@@ -203,11 +203,11 @@ test("writing and scheduling handoffs preserve their information boundaries", as
   ).toHaveAttribute("href", booking!);
 });
 
-test("chat loads in the portfolio window and preserves history and drafts across navigation", async ({
+test("chat loads directly and and preserves history and drafts across navigation", async ({
   page,
 }) => {
   await page.goto("/chat");
-  const window = page.getByRole("region", { name: "Portfolio window" });
+  const window = page.getByRole("main", { name: "Portfolio content" });
   const heading = window.getByRole("heading", {
     name: "Ask anything about Sanket",
     level: 1,
@@ -242,36 +242,42 @@ test("chat loads in the portfolio window and preserves history and drafts across
   await expect(conversation).toContainText("experiment in AI");
 });
 
-for (const control of ["Close window", "Minimize window"]) {
-  test(`${control} stops chat and skip-to-content restores its history and draft`, async ({
-    page,
-  }) => {
-    await page.goto("/chat");
-    const window = page.getByRole("region", { name: "Portfolio window" });
-    await window.getByLabel("Your question").fill("slow response");
-    await window.getByRole("button", { name: "Send", exact: true }).click();
-    await expect(
-      window.getByRole("button", { name: "Stop", exact: true }),
-    ).toBeVisible();
-    await window
-      .getByLabel("Your question")
-      .fill("Keep this draft while hidden");
-    await window.getByRole("button", { name: control, exact: true }).click();
-    await expect(window).toBeHidden();
-    await page.locator(".skip-link").focus();
-    await page.keyboard.press("Enter");
-    await expect(window).toBeVisible();
-    await expect(window.getByLabel("Your question")).toHaveValue(
-      "Keep this draft while hidden",
-    );
-    await expect(
-      window.getByRole("log", { name: "Conversation" }),
-    ).toContainText("slow response");
-    await expect(
-      window.getByRole("button", { name: "Stop", exact: true }),
-    ).toBeHidden();
-    await expect(
-      window.getByRole("button", { name: "Retry", exact: true }),
-    ).toBeVisible();
-  });
-}
+test("navigating away stops chat while browser back preserves history and draft", async ({
+  page,
+}) => {
+  await page.goto("/chat");
+  const content = page.getByRole("main", { name: "Portfolio content" });
+  await content.getByLabel("Your question").fill("slow response");
+  await content.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(
+    content.getByRole("button", { name: "Stop", exact: true }),
+  ).toBeVisible();
+  await content
+    .getByLabel("Your question")
+    .fill("Keep this draft while hidden");
+  await content
+    .getByRole("navigation", { name: "Approved portfolio sources" })
+    .getByRole("link", { name: "Projects", exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/projects$/);
+  await expect(
+    content.getByRole("heading", { name: "The workbench." }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("textbox", { name: "Your question" }),
+  ).toHaveCount(0);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/chat$/);
+  await expect(content.getByLabel("Your question")).toHaveValue(
+    "Keep this draft while hidden",
+  );
+  await expect(
+    content.getByRole("log", { name: "Conversation" }),
+  ).toContainText("slow response");
+  await expect(
+    content.getByRole("button", { name: "Stop", exact: true }),
+  ).toBeHidden();
+  await expect(
+    content.getByRole("button", { name: "Retry", exact: true }),
+  ).toBeVisible();
+});

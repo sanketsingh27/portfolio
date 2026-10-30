@@ -1,105 +1,111 @@
 import { test, expect } from "@playwright/test";
-test("chat entry is hidden while the dock exposes the three contact destinations", async ({
+
+test("chat entry stays hidden and contact links retain their destinations", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.getByRole("link", { name: /Ask anything about Sanket/ })).toHaveCount(0);
-  await page.getByRole("button", { name: "Close window", exact: true }).click();
-  await expect(page.locator(".assistant-launcher")).toHaveCount(0);
-  await expect(page.getByText("Open a folder to explore.")).toBeVisible();
-  const dock = page.getByRole("navigation", {
+  await expect(
+    page.getByRole("link", { name: /Ask anything about Sanket/ }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("textbox", { name: "Your question" }),
+  ).toHaveCount(0);
+  const contacts = page.getByRole("navigation", {
     name: "Contact and social links",
   });
-  await expect(dock.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute(
-    "href",
-    "https://example.org/linkedin",
-  );
-  await expect(dock.getByRole("link", { name: /Twitter/ })).toHaveAttribute(
+  await expect(
+    contacts.getByRole("link", { name: /LinkedIn/ }),
+  ).toHaveAttribute("href", "https://example.org/linkedin");
+  await expect(contacts.getByRole("link", { name: /Twitter/ })).toHaveAttribute(
     "href",
     "https://example.org/twitter",
   );
   await expect(
-    dock.getByRole("link", { name: "Email", exact: true }),
+    contacts.getByRole("link", { name: /^Email/ }),
   ).toHaveAttribute("href", "mailto:test@example.org");
 });
-test("assistant source restores a closed window even when its URL is unchanged", async ({
+
+test("landing navigation reaches work and about and offers a downloadable resume", async ({
   page,
+  request,
 }) => {
-  await page.goto("/projects");
-  await page.getByRole("button", { name: "Close window" }).click();
-  await page.goto("/chat");
-  await page
-    .getByRole("navigation", { name: "Approved portfolio sources" })
-    .getByRole("link", { name: "Projects", exact: true })
-    .click();
+  await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "The workbench." }),
+    page.getByRole("heading", {
+      name: "I build products and I ship them.",
+      level: 1,
+    }),
   ).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  await nav.getByRole("link", { name: "Work", exact: true }).click();
+  await expect(page).toHaveURL(/\/#work$/);
+  await expect(page.locator("#work")).toBeInViewport();
+  await expect(
+    page.locator("#work").getByRole("link", { name: /Fixture project/ }),
+  ).toBeVisible();
+  await nav.getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL(/\/#about$/);
+  await expect(page.locator("#about")).toBeInViewport();
+  const resumes = page.locator('a[download][href="/sanket-singh-resume.pdf"]');
+  await expect(resumes).toHaveCount(2);
+  expect((await request.get("/sanket-singh-resume.pdf")).ok()).toBe(true);
 });
-test("desktop opens About and preserves navigation through window controls", async ({
+
+test("project and writing routes preserve navigation, browser history and reload", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Hello, I’m/ })).toBeVisible();
-  await page.getByRole("link", { name: "Projects", exact: true }).click();
-  await expect(page).toHaveURL(/\/projects$/);
+  await page
+    .locator("#work")
+    .getByRole("link", { name: /Fixture project/ })
+    .click();
+  await expect(page).toHaveURL(/\/projects\/fixture-project$/);
   await expect(
-    page.getByRole("heading", { name: "The workbench." }),
+    page.getByRole("heading", { name: "Fixture project", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Minimize window" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Room to explore." }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Restore window" }).click();
-  await expect(
-    page.getByRole("heading", { name: "The workbench." }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Close window" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Room to explore." }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Projects", exact: true }),
-  ).toBeFocused();
-  await page.getByRole("link", { name: "Writing", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("link", { name: "Writing", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Notes from the middle." }),
   ).toBeVisible();
   await page.goBack();
   await expect(
-    page.getByRole("heading", { name: "The workbench." }),
+    page.getByRole("heading", { name: "Fixture project", exact: true }),
   ).toBeVisible();
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "The workbench." }),
+    page.getByRole("heading", { name: "Fixture project", exact: true }),
   ).toBeVisible();
 });
 
-test("desktop window stays reachable after dragging and viewport resize", async ({
-  page,
-}) => {
+test("skip link focuses the portfolio content", async ({ page }) => {
   await page.goto("/");
-  const bar = page.locator(".titlebar");
-  const box = (await bar.boundingBox())!;
-  await page.mouse.move(box.x + 80, box.y + 20);
-  await page.mouse.down();
-  await page.mouse.move(-400, -400);
-  await page.mouse.up();
-  const window = page.getByRole("region", { name: "Portfolio window" });
-  const moved = (await window.boundingBox())!;
-  expect(moved.x).toBeGreaterThanOrEqual(0);
-  expect(moved.y).toBeGreaterThanOrEqual(0);
-  await page.setViewportSize({ width: 850, height: 700 });
+  await page.keyboard.press("Tab");
   await expect(
-    page.getByRole("button", { name: "Close window" }),
-  ).toBeInViewport();
+    page.getByRole("link", { name: "Skip to content" }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("main", { name: "Portfolio content" }),
+  ).toBeFocused();
 });
-test("phone content uses the page scroll and all sections remain reachable", async ({
+
+test("phone content uses page scroll and all navigation remains reachable", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await page.getByRole("link", { name: "Writing", exact: true }).click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page
+    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("link", { name: "Writing", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Notes from the middle." }),
   ).toBeVisible();

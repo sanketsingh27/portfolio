@@ -81,7 +81,7 @@ test("writing links show supplied summaries and open the original publication", 
   );
   await expect(publication).toHaveAttribute("target", "_blank");
   await expect(publication).toHaveAttribute("rel", "noopener noreferrer");
-  await expect(page).toHaveTitle("Writing · Sanket’s desktop");
+  await expect(page).toHaveTitle("Writing · Sanket Singh");
 });
 
 test("project filters, details and direct links describe the same approved record", async ({
@@ -140,7 +140,9 @@ test("invalid detail destinations return a real not-found response", async ({
     page.getByRole("heading", { name: "A wrong turn." }),
   ).toBeVisible();
   await page.getByRole("link", { name: /Back to About/ }).click();
-  await expect(page.getByRole("heading", { name: /Hello, I’m/ })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "I build products and I ship them." }),
+  ).toBeVisible();
 });
 
 test("mobile layout stays within a narrow viewport with chat open", async ({

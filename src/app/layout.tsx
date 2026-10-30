@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Desktop from "@/components/Desktop";
+import PortfolioShell from "@/components/PortfolioShell";
 import { getPortfolio } from "@/lib/content";
 import "./globals.css";
+import "./design-two.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -10,8 +11,12 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000"),
   ),
-  title: { default: "Sanket’s desktop", template: "%s · Sanket’s desktop" },
-  description: "A personal desktop. Work, writing, and room to explore.",
+  title: {
+    default: "Sanket Singh · Full-Stack Engineer",
+    template: "%s · Sanket Singh",
+  },
+  description:
+    "Backend systems, AI-powered products, and things worth shipping. Senior full-stack engineer, available to join immediately.",
 };
 
 export default function RootLayout({
@@ -23,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Desktop data={data}>{children}</Desktop>
+        <PortfolioShell data={data}>{children}</PortfolioShell>
       </body>
     </html>
   );
